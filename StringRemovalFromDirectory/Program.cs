@@ -32,33 +32,36 @@ namespace StringRemovalFromDirectory
 
         private static void ModifyFiles(string directory, string[] filesInDirectory)
         {
-            filesInDirectory = Directory.GetFiles(directory);
-            Console.WriteLine("Enter the text to remove from files in directory:" + directory);
-            var response = Console.ReadLine();
-            if (response == "")
+            while (true)
             {
-                response = " ";
-            }
+                filesInDirectory = Directory.GetFiles(directory);
+                Console.WriteLine("Enter the text to remove from files in directory:" + directory);
+                var response = Console.ReadLine();
+                if (response == "")
+                {
+                    response = " ";
+                }
 
-            foreach (var file in filesInDirectory)
-            {
-                try
+                foreach (var file in filesInDirectory)
                 {
-                    var d = directory;
-                    var fileWithoutDirectory = Path.GetFileName(file);
-                    var renamedFile = fileWithoutDirectory.Replace(response + "", "");
-                    d += $@"\{renamedFile}";
-                    Console.WriteLine("D Value::" + d);
-                    File.Move(file, d);
+                    try
+                    {
+                        var d = directory;
+                        var fileWithoutDirectory = Path.GetFileName(file);
+                        var renamedFile = fileWithoutDirectory.Replace(response + "", "");
+                        d += $@"\{renamedFile}";
+                        Console.WriteLine("D Value::" + d);
+                        File.Move(file, d);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Error with file:{file}::{e}");
+                        continue;
+                    }
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Error with file:{file}::{e}");
-                    continue;
-                }
+
+                Console.WriteLine("Feel free to exit the program when you're done editing");
             }
-            Console.WriteLine("Feel free to exit the program when you're done editing");
-            ModifyFiles(directory, filesInDirectory);
         }
 
         private static string GetDirectoryResponse()
