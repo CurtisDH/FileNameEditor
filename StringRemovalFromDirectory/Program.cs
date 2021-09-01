@@ -5,6 +5,7 @@ namespace StringRemovalFromDirectory
 {
     internal static class Program
     {
+        private static string _globalDirectory;
         public static void Main(string[] args)
         {
             Initial();
@@ -12,22 +13,22 @@ namespace StringRemovalFromDirectory
 
         private static void Initial()
         {
-            var dir = SetDirectory();
-            Console.WriteLine("Directory Selected:" + dir);
+            SetDirectory();
+            Console.WriteLine("Directory Selected:" + _globalDirectory);
             var response = GetDirectoryResponse();
             if (response == "n")
             {
                 Initial();
             }
 
-            var files = Directory.GetFiles(dir);
+            var files = Directory.GetFiles(_globalDirectory);
             Console.WriteLine($"Found:{files.Length} files");
             foreach (var file in files)
             {
                 Console.WriteLine(file);
             }
 
-            ModifyFiles(dir, files);
+            ModifyFiles(_globalDirectory, files);
         }
 
         private static void ModifyFiles(string directory, string[] filesInDirectory)
@@ -82,14 +83,19 @@ namespace StringRemovalFromDirectory
             return response;
         }
 
-        private static string SetDirectory()
+        private static void SetDirectory()
         {
-            Console.WriteLine("Enter Directory");
-            var directory = Console.ReadLine();
-            if (Directory.Exists(directory)) return directory;
-            Console.WriteLine($"Directory:{directory} does not exist");
-            SetDirectory();
-            return directory;
+            while (true)
+            {
+                Console.WriteLine("Enter Directory");
+                var directory = Console.ReadLine();
+                if (Directory.Exists(directory))
+                {
+                    _globalDirectory = directory;
+                    return;
+                }
+                Console.WriteLine($"Directory:{directory} does not exist");
+            }
         }
     }
 }
