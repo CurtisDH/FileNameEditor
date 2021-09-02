@@ -6,6 +6,7 @@ namespace StringRemovalFromDirectory
     internal static class Program
     {
         private static string _globalDirectory;
+
         public static void Main(string[] args)
         {
             Initial();
@@ -15,7 +16,8 @@ namespace StringRemovalFromDirectory
         {
             SetDirectory();
             Console.WriteLine("Directory Selected:" + _globalDirectory);
-            var response = GetDirectoryResponse();
+            Console.WriteLine("Is Directory Correct? Y/N");
+            var response = GetYesOrNoResponse();
             if (response == "n")
             {
                 Initial();
@@ -61,25 +63,31 @@ namespace StringRemovalFromDirectory
                     }
                 }
 
-                Console.WriteLine("Feel free to exit the program when you're done editing");
+                Console.WriteLine("Continue editing?");
+                var input = GetYesOrNoResponse();
+                if (input != "n") continue;
+                Initial();
+                break;
             }
         }
 
-        private static string GetDirectoryResponse()
+        private static string GetYesOrNoResponse()
         {
-            Console.WriteLine("Is Directory Correct? Y/N");
             var response = Console.ReadLine();
-            response = response.ToLower();
-            var responseCharArray = response.ToCharArray();
-
-            if (responseCharArray[0] == 'y' || responseCharArray[0] == 'n')
+            if (!string.IsNullOrEmpty(response))
             {
-                return responseCharArray[0].ToString();
+                response = response.ToLower();
+                var responseCharArray = response.ToCharArray();
+
+                if (responseCharArray[0] == 'y' || responseCharArray[0] == 'n')
+                {
+                    return responseCharArray[0].ToString();
+                }
             }
 
             Console.WriteLine("Invalid response..");
             Console.WriteLine("Try again Please use 'y' and 'n'");
-            GetDirectoryResponse();
+            GetYesOrNoResponse();
             return response;
         }
 
@@ -94,6 +102,7 @@ namespace StringRemovalFromDirectory
                     _globalDirectory = directory;
                     return;
                 }
+
                 Console.WriteLine($"Directory:{directory} does not exist");
             }
         }
